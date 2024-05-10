@@ -54,7 +54,7 @@ public class MessageDAO
         return msgList;
      }
 
-    // Get One Message w/ msg_ID
+    // Get One Message w/ msg_ID 
      public Message getMessageWithId(int id)
      {
         Connection cnc = ConnectionUtil.getConnection();
