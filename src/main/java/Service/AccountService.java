@@ -5,7 +5,10 @@ import DAO.AccountDAO;
 public class AccountService 
 {
     AccountDAO accDAO;
-
+    public AccountService()
+    {
+        accDAO = new AccountDAO();
+    }
     public AccountService(AccountDAO accDAO)
     {
         this.accDAO = accDAO;

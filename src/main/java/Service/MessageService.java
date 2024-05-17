@@ -8,15 +8,20 @@ public class MessageService
 {
     MessageDAO msgDAO;
     AccountDAO accDAO;
-
+    public MessageService()
+    {
+        msgDAO = new MessageDAO();
+        accDAO = new AccountDAO();
+    }
     public MessageService(MessageDAO msgDAO)
     {
         this.msgDAO = msgDAO;
+        this.accDAO = new AccountDAO();
+
     }
 
     public Message addMessage(Message msg)
     {
-
         if(msg.getMessage_text().length() <= 255 && accDAO.idExists(msg.getPosted_by()) == true)
         {
             return msgDAO.createMessage(msg);
