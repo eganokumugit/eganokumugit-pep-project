@@ -3,10 +3,11 @@ import  Model.Message;
 
 import java.util.List;
 
-import DAO.MessageDAO;
+import DAO.*;
 public class MessageService 
 {
     MessageDAO msgDAO;
+    AccountDAO accDAO;
 
     public MessageService(MessageDAO msgDAO)
     {
@@ -15,12 +16,27 @@ public class MessageService
 
     public Message addMessage(Message msg)
     {
-        return msgDAO.createMessage(msg);
+
+        if(msg.getMessage_text().length() <= 255 && accDAO.getAccountWithId(msg.getPosted_by()) != null)
+        {
+            return msgDAO.createMessage(msg);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public Message deleteMessage(int id)
     {
-        return msgDAO.deleteMessageWithId(id);
+        if(msgDAO.getMessageWithId(id) == null)
+        {
+            return null;
+        }
+        else
+        {
+            return msgDAO.deleteMessageWithId(id);
+        }
     }
 
     public List<Message> getAllMessages()
@@ -40,6 +56,10 @@ public class MessageService
     public Message updateMessage(int id, String newMsg)
     {
         if(msgDAO.getMessageWithId(id) == null)
+        {
+            return null;
+        }
+        else if(newMsg.length() > 255)
         {
             return null;
         }
