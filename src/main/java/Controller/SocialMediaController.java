@@ -63,6 +63,7 @@ public class SocialMediaController {
         else
         {
             ctx.json(mapper.writeValueAsString(addedAcc));
+            ctx.status(200);
         }
 
     }
@@ -78,6 +79,7 @@ public class SocialMediaController {
         else
         {
             ctx.json(mapper.writeValueAsString(loggedInAcc));
+            ctx.status(200);
         }
 
     }
@@ -93,27 +95,34 @@ public class SocialMediaController {
         else
         {
             ctx.json(mapper.writeValueAsString(addedMsg));
+            ctx.status(200);
+
         }
 
     }
     private void getMessageHandler(Context ctx)
     {
         ctx.json(msgService.getAllMessages());
+        ctx.status(200);
+
     }
     private void getMessageWithIdHandler(Context ctx)
     {
         int msgId = Integer.parseInt(ctx.pathParam("message_id"));
-      ctx.json(msgService.getMessageWithId(msgId));
+        ctx.json(msgService.getMessageWithId(msgId));
+        ctx.status(200);
     }
     private void deleteMessageHandler(Context ctx)
     {
         int msgId = Integer.parseInt(ctx.pathParam("message_id"));
         ctx.json(msgService.deleteMessage(msgId));
+        ctx.status(200);
     }
     private void getMessagesFromAccountHandler(Context ctx)
     {
         int accId = Integer.parseInt(ctx.pathParam("account_id"));
         ctx.json(msgService.getAllMessagesFromUser(accId));
+        ctx.status(200);
     }
     private void updateMessageHandler(Context ctx) throws JsonProcessingException
     {
@@ -129,6 +138,7 @@ public class SocialMediaController {
         else
         {
             ctx.json(mapper.writeValueAsString(updatedMsg));
+            ctx.status(200);
         }
 
     }
