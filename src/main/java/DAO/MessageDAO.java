@@ -120,7 +120,7 @@ public class MessageDAO
         ArrayList<Message> msgList = new ArrayList<>();
         try 
         {
-            String sql = "SELECT * FROM message, account a WHERE a.account_id=?;";
+            String sql = "SELECT * FROM message m, account a WHERE a.account_id=? AND m.posted_by=a.account_id;";
             PreparedStatement ps = cnc.prepareStatement(sql);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
