@@ -17,7 +17,7 @@ public class MessageService
     public Message addMessage(Message msg)
     {
 
-        if(msg.getMessage_text().length() <= 255 && accDAO.getAccountWithId(msg.getPosted_by()) != null)
+        if(msg.getMessage_text().length() <= 255 && accDAO.idExists(msg.getPosted_by()) == false)
         {
             return msgDAO.createMessage(msg);
         }
