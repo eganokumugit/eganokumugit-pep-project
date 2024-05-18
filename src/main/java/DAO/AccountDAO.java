@@ -12,19 +12,19 @@ public class AccountDAO
         Connection cnc = ConnectionUtil.getConnection();
         try 
         {
-            String sql = "SELECT username FROM account WHERE username=?;";
+            String sql = "SELECT * FROM account WHERE username=?;";
             PreparedStatement ps = cnc.prepareStatement(sql);
             ps.setString(1, username);
 
-            if(ps.executeUpdate() > 0)
+            if(ps.executeUpdate() == 0)
             {
-                return true;
+                return false;
             }
             
         }catch (SQLException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
-        return false;
+        return true;
      }
 
     // Register User
@@ -39,6 +39,7 @@ public class AccountDAO
             ps.setString(1, acc.getUsername());
             ps.setString(2, acc.getPassword());
             ps.executeUpdate();
+
             return acc;
         }catch (SQLException e) {
             System.out.println("ERROR: " + e.getMessage());
@@ -46,22 +47,17 @@ public class AccountDAO
         return null;
      }
     // Login User
-    public Account loginUser(String username, String password)
+    public Account loginUser(Account acc)
     {
        Connection cnc = ConnectionUtil.getConnection();
        try 
        {
            String sql = "SELECT * FROM account WHERE username=? AND password=?;";
            PreparedStatement ps = cnc.prepareStatement(sql);
-           ps.setString(1, username);
-           ps.setString(2, password);           
-           ResultSet rs = ps.executeQuery();
-           Account acc = new Account();
-           while(rs.next())
-           {
-               acc.setUsername(rs.getString("username"));
-               acc.setPassword(rs.getString("password"));
-           }
+           ps.setString(1, acc.getUsername());
+           ps.setString(2, acc.getPassword());           
+           ps.executeQuery();
+
            return acc;
        }catch (SQLException e) {
            System.out.println("ERROR: " + e.getMessage());

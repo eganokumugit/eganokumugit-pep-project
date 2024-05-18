@@ -16,20 +16,20 @@ public class AccountService
 
     public Account registerAccount(Account acc)
     {
-        if(accDAO.userExists(acc.getUsername()) == true)
+        if(accDAO.userExists(acc.getUsername()) == false && acc.getUsername().length() > 0 && acc.getPassword().length() > 4)
         {
-            return null;
+            //accDAO.registerAccount(acc);
+            return accDAO.registerAccount(acc);
         }
         else
         {
-            accDAO.registerAccount(acc);
-            return acc;
+            return null;
         }
     }
 
-    public Account loginUser(String username, String password)
+    public Account loginUser(Account acc)
     {
-        return accDAO.loginUser(username, password);
+        return accDAO.loginUser(acc);
     }
 
 }

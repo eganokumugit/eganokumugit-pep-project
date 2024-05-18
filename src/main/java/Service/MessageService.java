@@ -22,7 +22,7 @@ public class MessageService
 
     public Message addMessage(Message msg)
     {
-        if(msg.getMessage_text().length() <= 255 && accDAO.idExists(msg.getPosted_by()) == true)
+        if(msg.getMessage_text().length() <= 255 && msg.getMessage_text().length() > 0 && accDAO.idExists(msg.getPosted_by()) == true)
         {
             return msgDAO.createMessage(msg);
         }

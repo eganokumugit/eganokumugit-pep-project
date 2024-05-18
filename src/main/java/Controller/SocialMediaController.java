@@ -71,7 +71,7 @@ public class SocialMediaController {
     {
         ObjectMapper mapper = new ObjectMapper();
         Account acc = mapper.readValue(ctx.body(), Account.class);
-        Account loggedInAcc = accService.loginUser(acc.getUsername(),acc.getPassword());
+        Account loggedInAcc = accService.loginUser(acc);
         if(loggedInAcc == null)
         {
             ctx.status(401);
@@ -115,8 +115,16 @@ public class SocialMediaController {
     private void deleteMessageHandler(Context ctx)
     {
         int msgId = Integer.parseInt(ctx.pathParam("message_id"));
-        ctx.json(msgService.deleteMessage(msgId));
-        ctx.status(200);
+        if(msgService.getMessageWithId(msgId) == null)
+        {
+            ctx.status(200);
+        }
+        else
+        {
+            ctx.json(msgService.deleteMessage(msgId));
+            ctx.status(200);
+        }
+        
     }
     private void getMessagesFromAccountHandler(Context ctx)
     {
