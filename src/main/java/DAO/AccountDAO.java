@@ -15,8 +15,8 @@ public class AccountDAO
             String sql = "SELECT * FROM account WHERE username=?;";
             PreparedStatement ps = cnc.prepareStatement(sql);
             ps.setString(1, username);
-
-            if(ps.executeUpdate() == 0)
+            int check = ps.executeUpdate();
+            if(check == 0)
             {
                 return false;
             }
@@ -55,10 +55,23 @@ public class AccountDAO
            String sql = "SELECT * FROM account WHERE username=? AND password=?;";
            PreparedStatement ps = cnc.prepareStatement(sql);
            ps.setString(1, acc.getUsername());
-           ps.setString(2, acc.getPassword());           
-           ps.executeQuery();
-
-           return acc;
+           ps.setString(2, acc.getPassword());   
+           if(ps.executeUpdate() > 0)
+           {    
+                ResultSet rs = ps.executeQuery();
+                Account newAcc = new Account();
+                while(rs.next())
+                {
+                    newAcc.setAccount_id(rs.getInt("account_id"));
+                    newAcc.setUsername(rs.getString("username"));
+                    newAcc.setPassword(rs.getString("password"));
+                }
+                return acc;
+           }  
+            else
+            {
+                return null;
+            }
        }catch (SQLException e) {
            System.out.println("ERROR: " + e.getMessage());
        }

@@ -29,7 +29,14 @@ public class AccountService
 
     public Account loginUser(Account acc)
     {
-        return accDAO.loginUser(acc);
+        if(acc.getUsername().length() > 0 && acc.getPassword().length() > 4)
+        {
+            return accDAO.loginUser(acc);
+        }
+        else
+        {
+            return null;
+        }
     }
 
 }
