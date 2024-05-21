@@ -74,15 +74,17 @@ public class MessageDAO
             PreparedStatement ps = cnc.prepareStatement(sql);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            Message msg = new Message();
             while(rs.next())
             {
+                Message msg = new Message();
+
                 msg.setMessage_id(rs.getInt("message_id"));
                 msg.setPosted_by(rs.getInt("posted_by"));
                 msg.setMessage_text(rs.getString("message_text"));
                 msg.setTime_posted_epoch(rs.getLong("time_posted_epoch"));
+                return msg;
+
             }
-            return msg;
         }catch (SQLException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
@@ -117,9 +119,17 @@ public class MessageDAO
             PreparedStatement ps = cnc.prepareStatement(sql);
             ps.setString(1, newMsg);
             ps.setInt(2, id);
-            ps.executeUpdate();
-            
-            return getMessageWithId(id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) 
+            {
+                // Create and return Message object
+                Message msg = new Message();
+                msg.setMessage_id(rs.getInt("message_id"));
+                msg.setPosted_by(rs.getInt("posted_by"));
+                msg.setMessage_text(rs.getString("message_text"));
+                msg.setTime_posted_epoch(rs.getLong("time_posted_epoch"));
+                return msg;
+            }
             
         }catch (SQLException e) {
             System.out.println("ERROR: " + e.getMessage());
@@ -153,19 +163,5 @@ public class MessageDAO
         return msgList;
     }
 
-    public boolean messageExists(int id)
-    {
-       Connection cnc = ConnectionUtil.getConnection();
-       try 
-       {
-           String sql = "SELECT * FROM message WHERE message_id=?;";
-           PreparedStatement ps = cnc.prepareStatement(sql);
-           ps.setInt(1, id);
-           ResultSet rs = ps.executeQuery();
-           return rs.next();
-       }catch (SQLException e) {
-           System.out.println("ERROR: " + e.getMessage());
-       }
-       return false;
-    }
+
 }
