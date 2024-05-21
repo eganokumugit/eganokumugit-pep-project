@@ -109,8 +109,16 @@ public class SocialMediaController {
     private void getMessageWithIdHandler(Context ctx)
     {
         int msgId = Integer.parseInt(ctx.pathParam("message_id"));
-        ctx.json(msgService.getMessageWithId(msgId));
-        ctx.status(200);
+        Message msg = msgService.getMessageWithId(msgId);
+        if(msg == null)
+        {
+            ctx.status(200);
+        }
+        else
+        {
+            ctx.json(msg);
+            ctx.status(200);
+        }
     }
     private void deleteMessageHandler(Context ctx)
     {
