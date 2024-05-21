@@ -91,12 +91,8 @@ public class AccountDAO
            String sql = "SELECT * FROM account WHERE account_id=?;";
            PreparedStatement ps = cnc.prepareStatement(sql);
            ps.setInt(1, id);
-
-           if(ps.executeUpdate() > 0)
-           {
-               return true;
-           }
-           
+           ResultSet rs = ps.executeQuery();
+           return rs.next();
        }catch (SQLException e) {
            System.out.println("ERROR: " + e.getMessage());
        }
