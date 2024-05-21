@@ -4,6 +4,7 @@ import Model.Account;
 import Util.ConnectionUtil;
 
 import java.sql.*;
+
 public class AccountDAO 
 {
     // Check Username
@@ -33,6 +34,7 @@ public class AccountDAO
      {
   
         Connection cnc = ConnectionUtil.getConnection();
+        Account newAcc = new Account();
         try 
         {
             String sql = "INSERT INTO account(username,password) VALUES(?,?);";
@@ -41,7 +43,21 @@ public class AccountDAO
             ps.setString(2, acc.getPassword());
             ps.executeUpdate();
 
-            return acc;
+            String sql2 = "SELECT * FROM account WHERE username=? AND password=?;";
+            PreparedStatement ps2 = cnc.prepareStatement(sql2);
+            ps2.setString(1, acc.getUsername());
+            ps2.setString(2, acc.getPassword());
+
+            ResultSet rs = ps.executeQuery(sql2);
+            while(rs.next())
+            {
+                newAcc.setAccount_id(rs.getInt("account_id"));
+                newAcc.setUsername(rs.getString("username"));
+                newAcc.setPassword(rs.getString("password"));
+
+            }
+
+            return newAcc;
         }catch (SQLException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
@@ -60,14 +76,20 @@ public class AccountDAO
 
             ResultSet rs = ps.executeQuery();
             Account newAcc = new Account();
-            while(rs.next())
+            if(rs.getFetchSize() > 0)
             {
-                newAcc.setAccount_id(rs.getInt("account_id"));
-                newAcc.setUsername(rs.getString("username"));
-                newAcc.setPassword(rs.getString("password"));
+                while(rs.next())
+                {
+                    newAcc.setAccount_id(rs.getInt("account_id"));
+                    newAcc.setUsername(rs.getString("username"));
+                    newAcc.setPassword(rs.getString("password"));
+                }
+                return newAcc;
             }
-            return acc;
-
+            else
+            {
+                return null;
+            }
        }catch (SQLException e) {
            System.out.println("ERROR: " + e.getMessage());
        }
