@@ -19,9 +19,19 @@ public class MessageDAO
             ps.setInt(1, msg.getPosted_by());
             ps.setString(2, msg.getMessage_text());
             ps.setLong(3, msg.getTime_posted_epoch());
-
             ps.executeUpdate();
-            return msg;
+
+            String sql2 = "SELECT * FROM message WHERE posted_by=? AND message_text=? AND time_posted_epoch=?;";
+            PreparedStatement ps2 = cnc.prepareStatement(sql2);
+            ps2.setInt(1, msg.getPosted_by());
+            ps2.setString(2, msg.getMessage_text());
+            ps2.setLong(3, msg.getTime_posted_epoch());
+            ResultSet rs = ps2.executeQuery();
+            if(rs.next())
+            {
+                msg.setMessage_id(rs.getInt("message_id"));
+                return msg;
+            }
         }catch (SQLException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
@@ -82,24 +92,24 @@ public class MessageDAO
      public Message deleteMessageWithId(int id)
      {
         Connection cnc = ConnectionUtil.getConnection();
-        Message deletedMessage = getMessageWithId(id);
         try 
         {
+            Message deletedMessage = getMessageWithId(id);
             String sql = "DELETE FROM message WHERE message_id=?";
             PreparedStatement ps = cnc.prepareStatement(sql);
             ps.setInt(1, id);
             ps.executeUpdate();
+            return deletedMessage;
         }catch (SQLException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
-        return deletedMessage;
+        return null;
      }
 
     // Update One Message w/ msg_ID
-     public int updateMessage(int id, String newMsg)
+     public Message updateMessage(int id, String newMsg)
      {
         Connection cnc = ConnectionUtil.getConnection();
-        int rowsAffected = 0;
         try 
         {
             
@@ -107,11 +117,14 @@ public class MessageDAO
             PreparedStatement ps = cnc.prepareStatement(sql);
             ps.setString(1, newMsg);
             ps.setInt(2, id);
-            rowsAffected = ps.executeUpdate();
+            ps.executeUpdate();
+            
+            return getMessageWithId(id);
+            
         }catch (SQLException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
-        return rowsAffected;
+        return null;
      }
     // Get All Messages from User w/ acc_ID
      public ArrayList<Message> getAllMessagesFromUser(int id)

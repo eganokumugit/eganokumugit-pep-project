@@ -60,18 +60,13 @@ public class MessageService
     }
     public Message updateMessage(int id, String newMsg)
     {
-        if(msgDAO.getMessageWithId(id) == null)
+        if(msgDAO.getMessageWithId(id) != null && newMsg.length() <= 255 && newMsg.length() > 0)
         {
-            return null;
-        }
-        else if(newMsg.length() > 255)
-        {
-            return null;
+            return msgDAO.updateMessage(id, newMsg);       
         }
         else
         {
-            msgDAO.updateMessage(id, newMsg);
-            return msgDAO.getMessageWithId(id);
+            return null;
         }
     }
 
