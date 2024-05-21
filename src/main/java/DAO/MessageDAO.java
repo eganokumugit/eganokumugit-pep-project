@@ -152,4 +152,20 @@ public class MessageDAO
         }
         return msgList;
     }
+
+    public boolean messageExists(int id)
+    {
+       Connection cnc = ConnectionUtil.getConnection();
+       try 
+       {
+           String sql = "SELECT * FROM message WHERE message_id=?;";
+           PreparedStatement ps = cnc.prepareStatement(sql);
+           ps.setInt(1, id);
+           ResultSet rs = ps.executeQuery();
+           return rs.next();
+       }catch (SQLException e) {
+           System.out.println("ERROR: " + e.getMessage());
+       }
+       return false;
+    }
 }
