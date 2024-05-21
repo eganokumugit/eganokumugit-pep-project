@@ -75,20 +75,13 @@ public class AccountDAO
            ps.setString(2, acc.getPassword());   
 
             ResultSet rs = ps.executeQuery();
-            Account newAcc = new Account();
-            if(rs.getFetchSize() > 0)
+            while(rs.next())
             {
-                while(rs.next())
-                {
-                    newAcc.setAccount_id(rs.getInt("account_id"));
-                    newAcc.setUsername(rs.getString("username"));
-                    newAcc.setPassword(rs.getString("password"));
-                }
+                Account newAcc = new Account();
+                newAcc.setAccount_id(rs.getInt("account_id"));
+                newAcc.setUsername(rs.getString("username"));
+                newAcc.setPassword(rs.getString("password"));
                 return newAcc;
-            }
-            else
-            {
-                return null;
             }
        }catch (SQLException e) {
            System.out.println("ERROR: " + e.getMessage());
