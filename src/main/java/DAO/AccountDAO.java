@@ -17,12 +17,7 @@ public class AccountDAO
             PreparedStatement ps = cnc.prepareStatement(sql);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
-            if(rs.getFetchSize() > 0)
-            {
-                return true;
-            }
-
-            
+            return rs.next();
         }catch (SQLException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
@@ -34,7 +29,6 @@ public class AccountDAO
      {
   
         Connection cnc = ConnectionUtil.getConnection();
-        Account newAcc = new Account();
         try 
         {
             String sql = "INSERT INTO account(username,password) VALUES(?,?);";
@@ -48,16 +42,16 @@ public class AccountDAO
             ps2.setString(1, acc.getUsername());
             ps2.setString(2, acc.getPassword());
 
-            ResultSet rs = ps.executeQuery(sql2);
-            while(rs.next())
+            ResultSet rs = ps2.executeQuery();
+            if(rs.next())
             {
+                Account newAcc = new Account();
                 newAcc.setAccount_id(rs.getInt("account_id"));
                 newAcc.setUsername(rs.getString("username"));
                 newAcc.setPassword(rs.getString("password"));
-
+                return newAcc;
             }
 
-            return newAcc;
         }catch (SQLException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
